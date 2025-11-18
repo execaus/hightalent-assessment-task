@@ -24,7 +24,7 @@ func TestQuestionService_Create(t *testing.T) {
 	text := "What is Go?"
 
 	expected := &models.Question{
-		Id:        1,
+		ID:        1,
 		Text:      text,
 		CreatedAt: time.Now(),
 	}
@@ -37,7 +37,7 @@ func TestQuestionService_Create(t *testing.T) {
 	result, err := svc.Create(text)
 
 	assert.NoError(t, err)
-	assert.Equal(t, expected.Id, result.Id)
+	assert.Equal(t, expected.ID, result.ID)
 	assert.Equal(t, expected.Text, result.Text)
 	assert.WithinDuration(t, expected.CreatedAt, result.CreatedAt, time.Second)
 }

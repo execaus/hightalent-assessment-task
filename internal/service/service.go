@@ -5,6 +5,8 @@ import (
 	"hightalent-assessment-task/internal/repository"
 )
 
+//go:generate mockgen -source=service.go -destination=mocks/mock.go
+
 type Question interface {
 	Create(test string) (*models.Question, error)
 }
