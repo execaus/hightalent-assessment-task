@@ -6,7 +6,7 @@ import (
 )
 
 type QuestionService struct {
-	repository repository.Repository
+	repository repository.Question
 }
 
 func (s *QuestionService) Create(test string) (*models.Question, error) {
@@ -14,7 +14,7 @@ func (s *QuestionService) Create(test string) (*models.Question, error) {
 	panic("implement me")
 }
 
-func NewQuestionService(repository repository.Repository) *QuestionService {
+func NewQuestionService(repository repository.Question) *QuestionService {
 	return &QuestionService{
 		repository: repository,
 	}

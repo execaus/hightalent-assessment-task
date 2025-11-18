@@ -29,3 +29,6 @@ go.sum
 Thumbs.db
 ehthumbs.db
 Desktop.ini
+
+# Mock directories
+**/mocks/
