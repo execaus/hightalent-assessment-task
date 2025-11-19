@@ -1,10 +1,12 @@
 package handler_test
 
 import (
+	"encoding/json"
 	"hightalent-assessment-task/internal/handler"
 	"hightalent-assessment-task/internal/models"
 	"hightalent-assessment-task/internal/service"
 	mock_service "hightalent-assessment-task/internal/service/mocks"
+	"hightalent-assessment-task/pkg/router"
 	"net/http"
 	"testing"
 	"time"
@@ -30,15 +32,27 @@ func TestCreateQuestion_Success(t *testing.T) {
 	}
 
 	mockService.EXPECT().
-		Create(gomock.Any()).
-		Return(int64(1), nil)
+		Create(requestBody.Text).
+		Return(&models.Question{
+			ID:        1,
+			Text:      "What is Go?",
+			CreatedAt: time.Now(),
+		}, nil)
 
-	// TODO response := h.CreateQuestion()
+	requestContext := router.NewTestContext(t.Context())
 
-	assert.Equal(t, http.StatusCreated, response.StatusCode)
+	h.CreateQuestion(requestContext)
 
-	assert.NoError(t, err)
-	assert.Greater(t, response.ID, int64(0))
-	assert.Equal(t, requestBody.Text, response.Body.Text)
-	assert.WithinDuration(t, time.Now(), response.Body.CreatedAt, time.Second)
+	assert.False(t, requestContext.IsAbort())
+
+	assert.Equal(t, http.StatusCreated, requestContext.Response.StatusCode)
+
+	var responseBody models.CreateQuestionResponse
+	if err := json.Unmarshal(requestContext.Response.Body, &responseBody); err != nil {
+		assert.NoError(t, err)
+	}
+
+	assert.Greater(t, responseBody.Question.ID, int64(0))
+	assert.Equal(t, requestBody.Text, responseBody.Question.Text)
+	assert.WithinDuration(t, time.Now(), responseBody.Question.CreatedAt, time.Second)
 }
