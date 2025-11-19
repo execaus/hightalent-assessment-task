@@ -3,8 +3,6 @@ package repository
 import (
 	"context"
 	"hightalent-assessment-task/internal/models"
-
-	"gorm.io/gorm"
 )
 
 //go:generate mockgen -source=repository.go -destination=mocks/mock.go
@@ -15,10 +13,4 @@ type Question interface {
 
 type Repository struct {
 	Question
-}
-
-func NewRepository(db *gorm.DB) *Repository {
-	return &Repository{
-		Question: NewQuestionRepository(db),
-	}
 }

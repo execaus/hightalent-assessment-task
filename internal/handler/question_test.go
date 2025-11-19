@@ -26,7 +26,7 @@ func TestCreateQuestion_HandlerCallServiceAndResponds(t *testing.T) {
 		Question: mockService,
 	}
 
-	h := handler.NewHandler(services)
+	h := handler.NewHandler(&services)
 
 	requestBody := models.CreateQuestionRequest{
 		Text: "What is Go?",

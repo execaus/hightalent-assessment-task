@@ -23,6 +23,7 @@ type BaseContext struct {
 	Request struct {
 		Body []byte
 	}
+	DynamicValues dynamicPathValues
 }
 
 func newBaseContext(ctx context.Context) BaseContext {
