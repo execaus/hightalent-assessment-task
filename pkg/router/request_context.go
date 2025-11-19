@@ -15,3 +15,7 @@ func NewRequestContext(ctx context.Context) Context {
 		cancel:      cancel,
 	}
 }
+
+func (c *RequestContext) SendCreated(data interface{}) {
+	// TODO
+}

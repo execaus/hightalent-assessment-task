@@ -9,7 +9,7 @@ type QuestionService struct {
 	repository repository.Question
 }
 
-func (s *QuestionService) Create(test string) (*models.Question, error) {
+func (s *QuestionService) Create(text string) (*models.Question, error) {
 	//TODO implement me
 	panic("implement me")
 }

@@ -20,6 +20,9 @@ type BaseContext struct {
 		StatusCode int
 		Body       []byte
 	}
+	Request struct {
+		Body []byte
+	}
 }
 
 func newBaseContext(ctx context.Context) BaseContext {
@@ -34,13 +37,9 @@ func (c *BaseContext) IsAbort() bool {
 
 func (c *BaseContext) BindJSON(recipient interface{}) error {
 	// TODO
-	return json.Unmarshal([]byte{}, recipient)
+	return json.Unmarshal(c.Request.Body, recipient)
 }
 
 func (c *BaseContext) Abort(err error) {
 	c.isAbort = true
-}
-
-func (c *BaseContext) SendCreated(data interface{}) {
-
 }
