@@ -32,3 +32,6 @@ Desktop.ini
 
 # Mock directories
 **/mocks/
+
+# Environment files
+*.env
