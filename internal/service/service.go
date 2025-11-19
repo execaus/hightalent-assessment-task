@@ -1,6 +1,7 @@
 package service
 
 import (
+	"context"
 	"hightalent-assessment-task/internal/models"
 	"hightalent-assessment-task/internal/repository"
 )
@@ -8,7 +9,7 @@ import (
 //go:generate mockgen -source=service.go -destination=mocks/mock.go
 
 type Question interface {
-	Create(test string) (*models.Question, error)
+	Create(ctx context.Context, test string) (*models.Question, error)
 }
 
 type Service struct {

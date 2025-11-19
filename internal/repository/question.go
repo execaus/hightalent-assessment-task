@@ -1,15 +1,35 @@
 package repository
 
-import "hightalent-assessment-task/internal/models"
+import (
+	"context"
+	"fmt"
+	"hightalent-assessment-task/internal/models"
+
+	"gorm.io/gorm"
+)
 
 type QuestionRepository struct {
+	db *gorm.DB
 }
 
-func (r *QuestionRepository) Create(text string) (*models.Question, error) {
-	//TODO implement me
-	panic("implement me")
+func (r *QuestionRepository) Create(ctx context.Context, text string) (*models.Question, error) {
+	question := models.QuestionTable{
+		Text: text,
+	}
+
+	if err := gorm.G[models.QuestionTable](r.db).Create(ctx, &question); err != nil {
+		return nil, fmt.Errorf("failed to create question: %w", err)
+	}
+
+	return &models.Question{
+		ID:        question.ID,
+		Text:      question.Text,
+		CreatedAt: question.CreatedAt,
+	}, nil
 }
 
-func NewQuestionRepository() *QuestionRepository {
-	return &QuestionRepository{}
+func NewQuestionRepository(db *gorm.DB) *QuestionRepository {
+	return &QuestionRepository{
+		db: db,
+	}
 }

@@ -13,7 +13,7 @@ func (h *Handler) CreateQuestion(ctx router.Context) {
 		return
 	}
 
-	question, err := h.service.Question.Create(request.Text)
+	question, err := h.service.Question.Create(ctx, request.Text)
 	if err != nil {
 		ctx.Abort(err)
 		return

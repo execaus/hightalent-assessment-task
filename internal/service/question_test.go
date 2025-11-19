@@ -30,11 +30,11 @@ func TestQuestionService_Create(t *testing.T) {
 	}
 
 	mockQuestion.EXPECT().
-		Create(text).
+		Create(t.Context(), text).
 		Return(expected, nil).
 		Times(1)
 
-	result, err := svc.Create(text)
+	result, err := svc.Create(t.Context(), text)
 
 	assert.NoError(t, err)
 	assert.Equal(t, expected.ID, result.ID)
