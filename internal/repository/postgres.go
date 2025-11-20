@@ -9,7 +9,7 @@ import (
 	"gorm.io/gorm"
 )
 
-func NewGormRepository(cfg *config.DatabaseConfig) *Repository {
+func NewGormRepository(cfg *config.DatabaseConfig) (*Repository, *gorm.DB) {
 	dsn := fmt.Sprintf(
 		"host=%s user=%s password=%s dbname=%s port=%v sslmode=disable",
 		cfg.Host,
@@ -27,5 +27,5 @@ func NewGormRepository(cfg *config.DatabaseConfig) *Repository {
 		Question: NewQuestionRepository(gormDB),
 		User:     NewUserRepository(gormDB),
 		Answer:   NewAnswerRepository(gormDB),
-	}
+	}, gormDB
 }

@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"embed"
 	"errors"
 	"hightalent-assessment-task/config"
 	"hightalent-assessment-task/internal/handler"
@@ -13,12 +14,30 @@ import (
 	"os/signal"
 	"syscall"
 	"time"
+
+	"github.com/pressly/goose/v3"
 )
+
+//go:embed migrations/*.sql
+var embedMigrations embed.FS
 
 func main() {
 	cfg := config.LoadConfig()
 
-	repositories := repository.NewGormRepository(&cfg.Database)
+	repositories, gormDB := repository.NewGormRepository(&cfg.Database)
+
+	goose.SetBaseFS(embedMigrations)
+	if err := goose.SetDialect("postgres"); err != nil {
+		log.Fatal(err)
+	}
+	db, err := gormDB.DB()
+	if err != nil {
+		log.Fatal(err)
+	}
+	if err := goose.Up(db, "migrations"); err != nil {
+		log.Fatal(err)
+	}
+
 	services := service.NewService(repositories, &cfg.Auth)
 	handlers := handler.NewHandler(services)
 
@@ -31,8 +50,7 @@ func main() {
 	server := r.GetServer(&cfg.Server.Port)
 
 	go func() {
-		log.Printf("Server is running on port %s\n", cfg.Server.Port)
-		if err := server.ListenAndServe(); err != nil && !errors.Is(err, http.ErrServerClosed) {
+		if err = server.ListenAndServe(); err != nil && !errors.Is(err, http.ErrServerClosed) {
 			log.Fatalf("Could not listen on %s: %v\n", cfg.Server.Port, err)
 		}
 	}()
