@@ -13,6 +13,10 @@ type AnswerService struct {
 	repository repository.Answer
 }
 
+func (s *AnswerService) Get(ctx context.Context, id uint) (*models.Answer, error) {
+	return s.repository.Get(ctx, id)
+}
+
 func (s *AnswerService) Create(ctx context.Context, text string, questionID uint, userID uuid.UUID) (*models.Answer, error) {
 	isExist, err := s.service.Question.IsExistByID(questionID)
 	if err != nil {

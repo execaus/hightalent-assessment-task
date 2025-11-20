@@ -25,6 +25,7 @@ type Context interface {
 	GetUserID() (uuid.UUID, error)
 	SetUserID(id string) error
 	GetHeader(key string) (string, error)
+	GetIntDynamicValue(key string) (int, error)
 }
 
 type RequestContext struct {
@@ -38,6 +39,19 @@ type RequestContext struct {
 	writer        http.ResponseWriter
 	ResponseBody  []byte
 	userID        *uuid.UUID
+}
+
+func (c *RequestContext) GetIntDynamicValue(key string) (int, error) {
+	val, ok := c.DynamicValues[key]
+	if !ok {
+		return 0, fmt.Errorf("dynamic value for key %q not found", key)
+	}
+	var i int
+	_, err := fmt.Sscanf(fmt.Sprintf("%v", val), "%d", &i)
+	if err != nil {
+		return 0, fmt.Errorf("dynamic value for key %q is not an int: %v", key, err)
+	}
+	return i, nil
 }
 
 func (c *RequestContext) GetHeader(key string) (string, error) {

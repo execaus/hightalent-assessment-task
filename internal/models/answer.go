@@ -22,3 +22,7 @@ type CreateAnswerRequest struct {
 type CreateAnswerResponse struct {
 	Answer *Answer `json:"answer"`
 }
+
+type GetAnswerResponse struct {
+	Answer *Answer `json:"answer"`
+}

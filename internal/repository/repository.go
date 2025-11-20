@@ -11,6 +11,7 @@ import (
 
 type Answer interface {
 	Create(ctx context.Context, text string, questionID uint, userID uuid.UUID) (*models.Answer, error)
+	Get(ctx context.Context, id uint) (*models.Answer, error)
 }
 
 type User interface {
