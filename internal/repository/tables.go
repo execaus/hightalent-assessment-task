@@ -1,6 +1,9 @@
 package repository
 
-import "time"
+import (
+	"hightalent-assessment-task/internal/models"
+	"time"
+)
 
 type QuestionTable struct {
 	ID        uint
@@ -10,4 +13,12 @@ type QuestionTable struct {
 
 func (t *QuestionTable) TableName() string {
 	return "app.questions"
+}
+
+func (t *QuestionTable) ToModel() *models.Question {
+	return &models.Question{
+		ID:        t.ID,
+		Text:      t.Text,
+		CreatedAt: t.CreatedAt,
+	}
 }

@@ -17,6 +17,7 @@ type Context interface {
 	Abort(err error)
 	SendCreated(data interface{})
 	SendNotFound(data interface{})
+	SendOK(data interface{})
 }
 
 type RequestContext struct {
@@ -78,6 +79,10 @@ func (c *RequestContext) SendCreated(data interface{}) {
 
 func (c *RequestContext) SendNotFound(data interface{}) {
 	c.send(http.StatusNotFound, data)
+}
+
+func (c *RequestContext) SendOK(data interface{}) {
+	c.send(http.StatusOK, data)
 }
 
 func (c *RequestContext) send(code int, data interface{}) {

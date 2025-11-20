@@ -21,11 +21,21 @@ func (r *QuestionRepository) Create(ctx context.Context, text string) (*models.Q
 		return nil, fmt.Errorf("failed to create question: %w", err)
 	}
 
-	return &models.Question{
-		ID:        question.ID,
-		Text:      question.Text,
-		CreatedAt: question.CreatedAt,
-	}, nil
+	return question.ToModel(), nil
+}
+
+func (r *QuestionRepository) GetAll(ctx context.Context) ([]*models.Question, error) {
+	rows, err := gorm.G[QuestionTable](r.db).Find(ctx)
+	if err != nil {
+		return nil, fmt.Errorf("failed to find questions: %w", err)
+	}
+
+	questions := make([]*models.Question, len(rows))
+	for i := 0; i < len(rows); i++ {
+		questions[i] = rows[i].ToModel()
+	}
+
+	return questions, nil
 }
 
 func NewQuestionRepository(db *gorm.DB) *QuestionRepository {

@@ -12,23 +12,20 @@ type PathNode struct {
 	method    string
 }
 
-func findHandlers(node *PathNode, path string) ([]HandleFunc, dynamicPathValues) {
+func findHandlers(node *PathNode, path, method string) ([]HandleFunc, dynamicPathValues) {
 	path = strings.TrimPrefix(path, "/")
 	if path == "" {
 		return nil, nil
 	}
 	segments := strings.Split(path, "/")
 
-	handlers, values, _ := traverse(node, segments, 0, make(dynamicPathValues), true)
+	handlers, values, _ := traverse(node, segments, 0, make(dynamicPathValues), method)
 
 	return handlers, values
 }
 
-func traverse(node *PathNode, segments []string, cursor int, values dynamicPathValues, exactMatch bool) ([]HandleFunc, dynamicPathValues, bool) {
+func traverse(node *PathNode, segments []string, cursor int, values dynamicPathValues, method string) ([]HandleFunc, dynamicPathValues, bool) {
 	if cursor >= len(segments) {
-		if exactMatch && len(node.children) == 0 && len(node.handlers) > 0 {
-			return node.handlers, values, true
-		}
 		return nil, nil, false
 	}
 
@@ -47,20 +44,27 @@ func traverse(node *PathNode, segments []string, cursor int, values dynamicPathV
 	if cursor == len(segments)-1 {
 		var handlers []HandleFunc
 
-		handlers = append(handlers, node.handlers...)
+		if node.method == method || node.method == "" {
+			handlers = append(handlers, node.handlers...)
+		}
 
 		for _, childNode := range node.children {
-			if childNode.value == "" {
+			if childNode.value == "" && (childNode.method == method || childNode.method == "") {
 				handlers = append(handlers, childNode.handlers...)
 			}
 		}
 
-		return handlers, values, true
+		if len(handlers) > 0 {
+			return handlers, values, true
+		}
+		return nil, nil, false
 	}
 
 	for _, childNode := range node.children {
-		if handlers, vals, ok := traverse(childNode, segments, cursor+1, values, exactMatch); ok {
-			return handlers, vals, true
+		if childNode.method == method || childNode.method == "" {
+			if handlers, vals, ok := traverse(childNode, segments, cursor+1, values, method); ok {
+				return handlers, vals, true
+			}
 		}
 	}
 

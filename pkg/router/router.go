@@ -59,7 +59,7 @@ func (r *Router) BaseHandle(writer http.ResponseWriter, request *http.Request) {
 
 	requestContext := NewRequestContext(ctx, cancel, writer, request)
 
-	handlers, dynamicValues := r.getHandler(request.URL.Path)
+	handlers, dynamicValues := r.getHandler(request.URL.Path, request.Method)
 	if len(handlers) == 0 {
 		log.Println("no handler found for path: " + request.URL.Path)
 		requestContext.SendNotFound("handler not found for the requested path")
@@ -77,8 +77,8 @@ func (r *Router) BaseHandle(writer http.ResponseWriter, request *http.Request) {
 	}
 }
 
-func (r *Router) getHandler(path string) ([]HandleFunc, dynamicPathValues) {
-	return findHandlers(r.rootPathNode, path)
+func (r *Router) getHandler(path, method string) ([]HandleFunc, dynamicPathValues) {
+	return findHandlers(r.rootPathNode, path, method)
 }
 
 func (r *Router) PrintRoutes() {

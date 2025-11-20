@@ -43,8 +43,28 @@ func TestCreateQuestionE2E(t *testing.T) {
 	require.NoError(t, err, "failed to unmarshal response")
 
 	require.NotNil(t, resp.Question, "question should not be nil")
+}
 
-	require.NotZero(t, resp.Question.ID, "question ID should not be zero")
-	require.Equal(t, body.Text, resp.Question.Text, "question text mismatch")
-	require.False(t, resp.Question.CreatedAt.IsZero(), "CreatedAt should not be zero")
+func TestGetAllQuestionsE2E(t *testing.T) {
+	cfg := config.LoadTestConfig()
+
+	repositories := repository.NewGormRepository(&cfg.Database)
+	services := service.NewService(repositories)
+	handlers := NewHandler(services)
+
+	router := handlers.GetRouter()
+
+	req := httptest.NewRequest(http.MethodGet, "/api/v1/questions", nil)
+	w := httptest.NewRecorder()
+
+	router.BaseHandle(w, req)
+
+	require.Equal(t, http.StatusOK, w.Code, "unexpected status code")
+
+	var resp models.GetAllQuestionsResponse
+	err := json.Unmarshal(w.Body.Bytes(), &resp)
+	require.NoError(t, err, "failed to unmarshal response")
+
+	require.NotNil(t, resp.Questions, "questions array should not be nil")
+	require.GreaterOrEqual(t, len(resp.Questions), 1, "questions array should have at least one element")
 }

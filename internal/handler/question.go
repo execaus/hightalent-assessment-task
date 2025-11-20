@@ -23,3 +23,14 @@ func (h *Handler) CreateQuestion(ctx router.Context) {
 		Question: question,
 	})
 }
+
+func (h *Handler) GetQuestions(ctx router.Context) {
+	questions, err := h.service.Question.GetAll(ctx)
+	if err != nil {
+		ctx.Abort(err)
+	}
+
+	ctx.SendOK(&models.GetAllQuestionsResponse{
+		Questions: questions,
+	})
+}

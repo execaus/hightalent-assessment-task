@@ -24,6 +24,7 @@ func (h *Handler) GetRouter() *router.Router {
 		{
 			questions := v1.Group("questions")
 			{
+				questions.GET("", h.GetQuestions)
 				questions.POST("", h.CreateQuestion)
 			}
 		}

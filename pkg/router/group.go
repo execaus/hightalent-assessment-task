@@ -39,3 +39,17 @@ func (g *Group) POST(path string, handlers ...HandleFunc) {
 
 	g.node.children = append(g.node.children, &node)
 }
+
+func (g *Group) GET(path string, handlers ...HandleFunc) {
+	value := strings.Trim(path, "/")
+	isDynamic := strings.Contains(path, "{")
+
+	node := PathNode{
+		value:     value,
+		isDynamic: isDynamic,
+		method:    http.MethodGet,
+		handlers:  handlers,
+	}
+
+	g.node.children = append(g.node.children, &node)
+}

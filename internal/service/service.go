@@ -10,6 +10,7 @@ import (
 
 type Question interface {
 	Create(ctx context.Context, test string) (*models.Question, error)
+	GetAll(ctx context.Context) ([]*models.Question, error)
 }
 
 type Service struct {

@@ -17,3 +17,7 @@ type CreateQuestionRequest struct {
 type CreateQuestionResponse struct {
 	Question *Question `json:"question"`
 }
+
+type GetAllQuestionsResponse struct {
+	Questions []*Question `json:"questions"`
+}
