@@ -5,9 +5,9 @@ import (
 )
 
 type Question struct {
-	ID        uint
-	Text      string
-	CreatedAt time.Time
+	ID        uint      `json:"id"`
+	Text      string    `json:"text"`
+	CreatedAt time.Time `json:"created_at"`
 }
 
 type CreateQuestionRequest struct {

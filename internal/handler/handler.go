@@ -22,6 +22,10 @@ func (h *Handler) GetRouter() *router.Router {
 	{
 		v1 := api.Group("v1")
 		{
+			auth := v1.Group("auth")
+			{
+				auth.POST("sign-up", h.SignUp)
+			}
 			questions := v1.Group("questions")
 			{
 				questions.GET("", h.GetQuestions)

@@ -12,7 +12,6 @@ import (
 type Router struct {
 	requestTimeout time.Duration
 	rootPathNode   *PathNode
-	mux            *http.ServeMux
 }
 
 const defaultPort = "8080"
@@ -22,8 +21,6 @@ func DefaultRouter() *Router {
 	r := Router{
 		requestTimeout: defaultRequestTime,
 	}
-
-	r.mux = http.NewServeMux()
 
 	return &r
 }
@@ -37,7 +34,7 @@ func (r *Router) GetServer(port *string) *http.Server {
 
 	return &http.Server{
 		Addr:    ":" + listenPort,
-		Handler: r.mux,
+		Handler: http.HandlerFunc(r.BaseHandle),
 	}
 }
 
@@ -60,6 +57,7 @@ func (r *Router) BaseHandle(writer http.ResponseWriter, request *http.Request) {
 	requestContext := NewRequestContext(ctx, cancel, writer, request)
 
 	handlers, dynamicValues := r.getHandler(request.URL.Path, request.Method)
+
 	if len(handlers) == 0 {
 		log.Println("no handler found for path: " + request.URL.Path)
 		requestContext.SendNotFound("handler not found for the requested path")

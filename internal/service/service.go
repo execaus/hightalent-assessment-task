@@ -5,12 +5,19 @@ import (
 	"hightalent-assessment-task/config"
 	"hightalent-assessment-task/internal/models"
 	"hightalent-assessment-task/internal/repository"
+
+	"github.com/google/uuid"
 )
 
 //go:generate mockgen -source=service.go -destination=mocks/mock.go
 
+type User interface {
+	IsExistByLogin(ctx context.Context, login string) (bool, error)
+	Create(ctx context.Context, login, password string) (user *models.User, token string, err error)
+	Get(ctx context.Context, id uuid.UUID) (*models.User, error)
+}
+
 type Auth interface {
-	GeneratePassword() (string, error)
 	HashPassword(password string) (string, error)
 	ComparePassword(hashedPassword, password string) error
 	GenerateJWT(userID string) (string, error)
@@ -25,11 +32,15 @@ type Question interface {
 type Service struct {
 	Question
 	Auth
+	User
 }
 
-func NewService(repos repository.Question, cfg *config.AuthConfig) *Service {
-	return &Service{
-		Question: NewQuestionService(repos),
-		Auth:     NewAuthService(cfg),
-	}
+func NewService(repos *repository.Repository, cfg *config.AuthConfig) *Service {
+	s := Service{}
+
+	s.Question = NewQuestionService(repos.Question, &s)
+	s.Auth = NewAuthService(cfg)
+	s.User = NewUserService(repos.User, &s)
+
+	return &s
 }

@@ -1,11 +1,9 @@
 package service
 
 import (
-	"crypto/rand"
 	"errors"
 	"hightalent-assessment-task/config"
 	"hightalent-assessment-task/internal/models"
-	"math/big"
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
@@ -14,8 +12,6 @@ import (
 
 const (
 	DefaultJWTExpireDuration = time.Hour * 24
-	passwordLength           = 16
-	chars                    = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
 )
 
 var ErrTokenInvalid = errors.New("invalid token")
@@ -26,19 +22,6 @@ type AuthService struct {
 
 func NewAuthService(cfg *config.AuthConfig) *AuthService {
 	return &AuthService{secretKey: cfg.SecretKey}
-}
-
-func (s *AuthService) GeneratePassword() (string, error) {
-	password := make([]byte, passwordLength)
-	for i := 0; i < passwordLength; i++ {
-		indexBig, err := rand.Int(rand.Reader, big.NewInt(int64(len(chars))))
-		if err != nil {
-			return "", err
-		}
-		password[i] = chars[indexBig.Int64()]
-	}
-
-	return string(password), nil
 }
 
 func (s *AuthService) HashPassword(password string) (string, error) {

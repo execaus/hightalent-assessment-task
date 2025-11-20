@@ -19,7 +19,7 @@ func TestCreateQuestionE2E(t *testing.T) {
 	cfg := config.LoadTestConfig()
 
 	repositories := repository.NewGormRepository(&cfg.Database)
-	services := service.NewService(repositories)
+	services := service.NewService(repositories, &cfg.Auth)
 	handlers := NewHandler(services)
 
 	router := handlers.GetRouter()
@@ -49,7 +49,7 @@ func TestGetAllQuestionsE2E(t *testing.T) {
 	cfg := config.LoadTestConfig()
 
 	repositories := repository.NewGormRepository(&cfg.Database)
-	services := service.NewService(repositories)
+	services := service.NewService(repositories, &cfg.Auth)
 	handlers := NewHandler(services)
 
 	router := handlers.GetRouter()

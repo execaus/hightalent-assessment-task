@@ -7,6 +7,7 @@ import (
 )
 
 type QuestionService struct {
+	service    *Service
 	repository repository.Question
 }
 
@@ -18,8 +19,9 @@ func (s *QuestionService) GetAll(ctx context.Context) ([]*models.Question, error
 	return s.repository.GetAll(ctx)
 }
 
-func NewQuestionService(repository repository.Question) *QuestionService {
+func NewQuestionService(repository repository.Question, service *Service) *QuestionService {
 	return &QuestionService{
+		service:    service,
 		repository: repository,
 	}
 }

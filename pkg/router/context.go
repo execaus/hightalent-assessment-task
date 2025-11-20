@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"hightalent-assessment-task/internal/service"
 	"io"
 	"log"
 	"net/http"
@@ -65,8 +66,14 @@ func (c *RequestContext) Abort(err error) {
 	c.isAbort = true
 
 	var httpError HTTPError
+	var businessLoginError service.BusinessLoginError
+
 	if errors.As(err, &httpError) {
 		c.writer.WriteHeader(httpError.StatusCode())
+		return
+	}
+	if errors.As(err, &businessLoginError) {
+		c.writer.WriteHeader(http.StatusBadRequest)
 		return
 	}
 

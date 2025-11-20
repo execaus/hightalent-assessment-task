@@ -5,6 +5,10 @@ CREATE TABLE app.questions (
     text TEXT NOT NULL,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
+
+COMMENT ON COLUMN app.questions.id IS 'Уникальный идентификатор вопроса';
+COMMENT ON COLUMN app.questions.text IS 'Текст вопроса';
+COMMENT ON COLUMN app.questions.created_at IS 'Время создания вопроса';
 -- +goose StatementEnd
 
 -- +goose Down
