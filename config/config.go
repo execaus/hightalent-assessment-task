@@ -11,6 +11,7 @@ import (
 type Config struct {
 	Server   ServerConfig
 	Database DatabaseConfig
+	Auth     AuthConfig
 }
 
 type ServerConfig struct {
@@ -23,6 +24,10 @@ type DatabaseConfig struct {
 	User     string
 	Password string
 	Name     string
+}
+
+type AuthConfig struct {
+	SecretKey string
 }
 
 const configPath = "config/config.yaml"
@@ -48,6 +53,7 @@ func LoadConfig() *Config {
 	}
 
 	cfg.Database.Password = os.Getenv("DATABASE_PASSWORD")
+	cfg.Auth.SecretKey = os.Getenv("JWT_SECRET_KEY")
 
 	return &cfg
 }

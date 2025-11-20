@@ -19,7 +19,7 @@ func main() {
 	cfg := config.LoadConfig()
 
 	repositories := repository.NewGormRepository(&cfg.Database)
-	services := service.NewService(repositories)
+	services := service.NewService(repositories, &cfg.Auth)
 	handlers := handler.NewHandler(services)
 
 	r := handlers.GetRouter()
