@@ -19,7 +19,7 @@ func TestQuestionService_Create(t *testing.T) {
 
 	mockQuestion := mockrepository.NewMockQuestion(ctrl)
 
-	svc := NewQuestionService(mockQuestion)
+	svc := NewQuestionService(mockQuestion, &Service{})
 
 	text := "What is Go?"
 

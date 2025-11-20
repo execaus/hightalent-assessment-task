@@ -13,13 +13,19 @@ func (h *Handler) CreateAnswer(ctx router.Context) {
 		return
 	}
 
+	questionID, err := ctx.GetIntDynamicValue("id")
+	if err != nil {
+		ctx.Abort(err)
+		return
+	}
+
 	userID, err := ctx.GetUserID()
 	if err != nil {
 		ctx.Abort(err)
 		return
 	}
 
-	answer, err := h.service.Answer.Create(ctx, request.Text, request.QuestionID, userID)
+	answer, err := h.service.Answer.Create(ctx, request.Text, uint(questionID), userID)
 	if err != nil {
 		ctx.Abort(err)
 		return
