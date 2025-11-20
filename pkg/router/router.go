@@ -14,6 +14,14 @@ type Router struct {
 	rootPathNode   *PathNode
 }
 
+func (r *Router) logRequest(request *http.Request, aborted bool) {
+	if aborted {
+		log.Printf("request processed: method=%s path=%s (aborted)", request.Method, request.URL.Path)
+	} else {
+		log.Printf("request processed: method=%s path=%s", request.Method, request.URL.Path)
+	}
+}
+
 const defaultPort = "8080"
 const defaultRequestTime = time.Second * 5
 
@@ -70,9 +78,12 @@ func (r *Router) BaseHandle(writer http.ResponseWriter, request *http.Request) {
 		handler(requestContext)
 
 		if requestContext.isAbort {
+			r.logRequest(request, true)
 			return
 		}
 	}
+
+	r.logRequest(request, false)
 }
 
 func (r *Router) getHandler(path, method string) ([]HandleFunc, dynamicPathValues) {

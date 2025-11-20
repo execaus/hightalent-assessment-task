@@ -26,3 +26,7 @@ type CreateAnswerResponse struct {
 type GetAnswerResponse struct {
 	Answer *Answer `json:"answer"`
 }
+
+type DeleteAnswerResponse struct {
+	Answer *Answer `json:"answer"`
+}

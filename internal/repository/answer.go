@@ -14,6 +14,26 @@ type AnswerRepository struct {
 	db *gorm.DB
 }
 
+func (r *AnswerRepository) Delete(id uint) (*models.Answer, error) {
+	ctx := context.Background()
+
+	row, err := gorm.G[AnswerTable](r.db).Where("id = ?", id).First(ctx)
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, fmt.Errorf("answer not found: %w", err)
+		}
+		return nil, fmt.Errorf("failed to get answer: %w", err)
+	}
+
+	_, err = gorm.G[AnswerTable](r.db).Where("id = ?", id).Delete(ctx)
+
+	if err != nil {
+		return nil, fmt.Errorf("failed to delete answer: %w", err)
+	}
+
+	return row.ToModel(), nil
+}
+
 func (r *AnswerRepository) GetAllByQuestionID(id uint) ([]*models.Answer, error) {
 	rows, err := gorm.G[AnswerTable](r.db).Where("question_id = ?", id).Find(context.Background())
 	if err != nil {

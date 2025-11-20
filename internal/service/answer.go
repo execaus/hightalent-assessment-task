@@ -14,6 +14,10 @@ type AnswerService struct {
 	repository repository.Answer
 }
 
+func (s *AnswerService) Delete(id uint) (*models.Answer, error) {
+	return s.repository.Delete(id)
+}
+
 func (s *AnswerService) GetAllByQuestionID(id uint) ([]*models.Answer, error) {
 	return s.repository.GetAllByQuestionID(id)
 }

@@ -40,6 +40,7 @@ func (h *Handler) GetRouter() *router.Router {
 			answers := v1.Group("answers")
 			{
 				answers.GET("{id}", h.GetAnswer)
+				answers.DELETE("{id}", h.DeleteAnswer)
 			}
 		}
 	}

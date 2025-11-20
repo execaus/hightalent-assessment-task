@@ -51,3 +51,25 @@ func (h *Handler) GetAnswer(ctx router.Context) {
 		Answer: answer,
 	})
 }
+
+func (h *Handler) DeleteAnswer(ctx router.Context) {
+	answerID, err := ctx.GetIntDynamicValue("id")
+	if err != nil {
+		ctx.Abort(err)
+		return
+	}
+
+	answer, err := h.service.Answer.Delete(uint(answerID))
+	if err != nil {
+		if answer == nil {
+			ctx.SendNotFound(err.Error())
+			return
+		}
+		ctx.Abort(err)
+		return
+	}
+
+	ctx.SendOK(&models.DeleteAnswerResponse{
+		Answer: answer,
+	})
+}
