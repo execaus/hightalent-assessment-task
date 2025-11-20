@@ -3,6 +3,7 @@ package handler
 import (
 	"bytes"
 	"encoding/json"
+	"hightalent-assessment-task/internal/models"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -23,8 +24,8 @@ func TestCreateQuestionE2E(t *testing.T) {
 
 	router := handlers.GetRouter()
 
-	body := map[string]interface{}{
-		"test": "What is go?",
+	body := models.CreateQuestionRequest{
+		Text: "What is go?",
 	}
 	jsonBody, _ := json.Marshal(body)
 
@@ -36,5 +37,14 @@ func TestCreateQuestionE2E(t *testing.T) {
 	router.BaseHandle(w, req)
 
 	require.Equal(t, http.StatusCreated, w.Code, "unexpected status code")
-	require.NotEmpty(t, w.Body.String(), "response body should not be empty")
+
+	var resp models.CreateQuestionResponse
+	err := json.Unmarshal(w.Body.Bytes(), &resp)
+	require.NoError(t, err, "failed to unmarshal response")
+
+	require.NotNil(t, resp.Question, "question should not be nil")
+
+	require.NotZero(t, resp.Question.ID, "question ID should not be zero")
+	require.Equal(t, body.Text, resp.Question.Text, "question text mismatch")
+	require.False(t, resp.Question.CreatedAt.IsZero(), "CreatedAt should not be zero")
 }
