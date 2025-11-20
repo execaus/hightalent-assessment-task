@@ -28,6 +28,7 @@ type Question interface {
 	Create(ctx context.Context, text string) (*models.Question, error)
 	GetAll(ctx context.Context) ([]*models.Question, error)
 	Get(ctx router.Context, id uint) (*models.Question, error)
+	Delete(id uint) (*models.Question, error)
 }
 
 type Repository struct {

@@ -12,6 +12,10 @@ type QuestionService struct {
 	repository repository.Question
 }
 
+func (s *QuestionService) Delete(id uint) (*models.Question, error) {
+	return s.repository.Delete(id)
+}
+
 func (s *QuestionService) Get(ctx router.Context, id uint) (*models.Question, []*models.Answer, error) {
 	question, err := s.repository.Get(ctx, id)
 	if err != nil {

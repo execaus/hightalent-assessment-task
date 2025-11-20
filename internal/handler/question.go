@@ -57,3 +57,25 @@ func (h *Handler) GetQuestion(ctx router.Context) {
 		Answers:  answers,
 	})
 }
+
+func (h *Handler) DeleteQuestion(ctx router.Context) {
+	questionID, err := ctx.GetIntDynamicValue("id")
+	if err != nil {
+		ctx.Abort(err)
+		return
+	}
+
+	question, err := h.service.Question.Delete(uint(questionID))
+	if err != nil {
+		if question == nil {
+			ctx.SendNotFound(err.Error())
+			return
+		}
+		ctx.Abort(err)
+		return
+	}
+
+	ctx.SendOK(&models.DeleteQuestionResponse{
+		Question: question,
+	})
+}

@@ -37,6 +37,7 @@ type Question interface {
 	Create(ctx context.Context, test string) (*models.Question, error)
 	GetAll(ctx context.Context) ([]*models.Question, error)
 	Get(ctx router.Context, id uint) (*models.Question, []*models.Answer, error)
+	Delete(id uint) (*models.Question, error)
 }
 
 type Service struct {

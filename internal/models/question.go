@@ -26,3 +26,7 @@ type GetQuestionResponse struct {
 	Question *Question `json:"question"`
 	Answers  []*Answer `json:"answers"`
 }
+
+type DeleteQuestionResponse struct {
+	Question *Question `json:"question"`
+}

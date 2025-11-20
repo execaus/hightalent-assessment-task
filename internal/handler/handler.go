@@ -35,6 +35,7 @@ func (h *Handler) GetRouter() *router.Router {
 				{
 					question.GET("", h.GetQuestion)
 					question.POST("answers", h.requireAuth, h.CreateAnswer)
+					question.DELETE("", h.DeleteQuestion)
 				}
 			}
 			answers := v1.Group("answers")
