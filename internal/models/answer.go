@@ -15,8 +15,8 @@ type Answer struct {
 }
 
 type CreateAnswerRequest struct {
-	Text       string `json:"text"`
-	QuestionID uint   `json:"question_id"`
+	Text       string `json:"text" validate:"required,min=1"`
+	QuestionID uint   `json:"question_id" validate:"required"`
 }
 
 type CreateAnswerResponse struct {

@@ -11,7 +11,7 @@ type Question struct {
 }
 
 type CreateQuestionRequest struct {
-	Text string `json:"text"`
+	Text string `json:"text" validate:"required,min=1"`
 }
 
 type CreateQuestionResponse struct {

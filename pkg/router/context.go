@@ -10,6 +10,7 @@ import (
 	"net/http"
 	"reflect"
 
+	"github.com/go-playground/validator/v10"
 	"github.com/google/uuid"
 )
 
@@ -39,6 +40,8 @@ type RequestContext struct {
 	ResponseBody  []byte
 	userID        *uuid.UUID
 }
+
+var validate = validator.New()
 
 func (c *RequestContext) GetIntDynamicValue(key string) (int, error) {
 	val, ok := c.DynamicValues[key]
@@ -107,6 +110,11 @@ func (c *RequestContext) BindJSON(recipient interface{}) error {
 	if err = json.Unmarshal(body, recipient); err != nil {
 		return NewBadRequestError("invalid JSON: " + err.Error())
 	}
+
+	if err = validate.Struct(recipient); err != nil {
+		return NewBadRequestError("validation failed: " + err.Error())
+	}
+
 	return nil
 }
 

@@ -9,8 +9,8 @@ type User struct {
 }
 
 type SignUpRequest struct {
-	Login    string `json:"login"`
-	Password string `json:"password"`
+	Login    string `json:"login" validate:"required,min=3"`
+	Password string `json:"password" validate:"required,min=6"`
 }
 
 type SignUpResponse struct {
