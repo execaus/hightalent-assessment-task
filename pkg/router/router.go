@@ -12,7 +12,7 @@ import (
 type Router struct {
 	requestTimeout time.Duration
 	rootPathNode   *PathNode
-	Mux            *http.ServeMux
+	mux            *http.ServeMux
 }
 
 const defaultPort = "8080"
@@ -23,7 +23,7 @@ func DefaultRouter() *Router {
 		requestTimeout: defaultRequestTime,
 	}
 
-	r.Mux = http.NewServeMux()
+	r.mux = http.NewServeMux()
 
 	return &r
 }
@@ -37,7 +37,7 @@ func (r *Router) GetServer(port *string) *http.Server {
 
 	return &http.Server{
 		Addr:    ":" + listenPort,
-		Handler: r.Mux,
+		Handler: r.mux,
 	}
 }
 
@@ -54,10 +54,10 @@ func (r *Router) Group(path string, middlewares ...HandleFunc) *Group {
 	}
 }
 
-func (r *Router) baseHandle(writer http.ResponseWriter, request *http.Request) {
+func (r *Router) BaseHandle(writer http.ResponseWriter, request *http.Request) {
 	ctx, cancel := context.WithTimeout(request.Context(), r.requestTimeout)
 
-	requestContext := NewRequestContext(ctx, cancel, writer)
+	requestContext := NewRequestContext(ctx, cancel, writer, request)
 
 	handlers, dynamicValues := r.getHandler(request.URL.Path)
 	if len(handlers) == 0 {

@@ -1,3 +1,3 @@
 package router
 
-type HandleFunc = func(Context)
+type HandleFunc = func(ctx Context)

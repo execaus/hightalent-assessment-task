@@ -7,7 +7,6 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
 	"hightalent-assessment-task/config"
@@ -33,8 +32,9 @@ func TestCreateQuestionE2E(t *testing.T) {
 	req.Header.Set("Content-Type", "application/json")
 
 	w := httptest.NewRecorder()
-	router.Mux.ServeHTTP(w, req)
 
-	assert.Equal(t, http.StatusCreated, w.Code, "unexpected status code")
+	router.BaseHandle(w, req)
+
+	require.Equal(t, http.StatusCreated, w.Code, "unexpected status code")
 	require.NotEmpty(t, w.Body.String(), "response body should not be empty")
 }

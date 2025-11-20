@@ -1,36 +1,42 @@
 package router
 
 import (
+	"bytes"
 	"context"
 	"encoding/json"
+	"io"
 	"log"
-	"net/http"
+	"net/http/httptest"
+	"time"
 )
 
 type TestContext struct {
-	BaseContext
+	RequestContext
 }
 
-func NewTestContext(ctx context.Context) *TestContext {
+func NewTestContext(ctx context.Context, timeout time.Duration) *TestContext {
+	c, cancel := context.WithTimeout(ctx, timeout)
+
 	return &TestContext{
-		BaseContext: newBaseContext(ctx),
+		RequestContext: *NewRequestContext(
+			c,
+			cancel,
+			httptest.NewRecorder(),
+			httptest.NewRequest("POST", "/", nil),
+		),
 	}
 }
 
 func (c *TestContext) PutRequestBody(body interface{}) error {
-	bytes, err := json.Marshal(body)
+	b, err := json.Marshal(body)
 	if err != nil {
-		log.Printf("Ошибка сериализации тела запроса: %+v, ошибка: %s\n", body, err.Error())
+		log.Printf("Failed to serialize request body: %+v, error: %s\n", body, err.Error())
 		return err
 	}
 
-	c.Request.Body = bytes
+	c.request.Body = io.NopCloser(bytes.NewReader(b))
+	c.request.ContentLength = int64(len(b))
+	c.request.Header.Set("Content-Type", "application/json")
 
 	return nil
-}
-
-func (c *TestContext) SendCreated(data interface{}) {
-	bytes, _ := json.Marshal(data)
-	c.Response.Body = bytes
-	c.Response.StatusCode = http.StatusCreated
 }

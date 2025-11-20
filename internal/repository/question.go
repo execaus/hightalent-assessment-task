@@ -13,11 +13,11 @@ type QuestionRepository struct {
 }
 
 func (r *QuestionRepository) Create(ctx context.Context, text string) (*models.Question, error) {
-	question := models.QuestionTable{
+	question := QuestionTable{
 		Text: text,
 	}
 
-	if err := gorm.G[models.QuestionTable](r.db).Create(ctx, &question); err != nil {
+	if err := gorm.G[QuestionTable](r.db).Create(ctx, &question); err != nil {
 		return nil, fmt.Errorf("failed to create question: %w", err)
 	}
 

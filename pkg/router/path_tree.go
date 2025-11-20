@@ -45,10 +45,17 @@ func traverse(node *PathNode, segments []string, cursor int, values dynamicPathV
 	}
 
 	if cursor == len(segments)-1 {
-		if len(node.handlers) > 0 {
-			return node.handlers, values, true
+		var handlers []HandleFunc
+
+		handlers = append(handlers, node.handlers...)
+
+		for _, childNode := range node.children {
+			if childNode.value == "" {
+				handlers = append(handlers, childNode.handlers...)
+			}
 		}
-		return nil, nil, false
+
+		return handlers, values, true
 	}
 
 	for _, childNode := range node.children {

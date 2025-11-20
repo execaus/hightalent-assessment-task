@@ -32,7 +32,7 @@ func TestCreateQuestion_HandlerCallServiceAndResponds(t *testing.T) {
 		Text: "What is Go?",
 	}
 
-	requestContext := router.NewTestContext(t.Context())
+	requestContext := router.NewTestContext(t.Context(), time.Second)
 
 	mockService.EXPECT().
 		Create(requestContext, requestBody.Text).
@@ -51,7 +51,7 @@ func TestCreateQuestion_HandlerCallServiceAndResponds(t *testing.T) {
 
 	var responseBody models.CreateQuestionResponse
 
-	err = json.Unmarshal(requestContext.Response.Body, &responseBody)
+	err = json.Unmarshal(requestContext.ResponseBody, &responseBody)
 	assert.NoError(t, err)
 
 	assert.Equal(t, responseBody.Question.ID, uint(0))
