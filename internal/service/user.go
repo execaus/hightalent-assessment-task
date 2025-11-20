@@ -4,6 +4,7 @@ import (
 	"context"
 	"hightalent-assessment-task/internal/models"
 	"hightalent-assessment-task/internal/repository"
+	"hightalent-assessment-task/pkg/router"
 
 	"github.com/google/uuid"
 )
@@ -24,7 +25,7 @@ func (s *UserService) Create(ctx context.Context, login, password string) (*mode
 	}
 
 	if isExist {
-		return nil, "", NewBusinessLoginError("user with this login already exists")
+		return nil, "", router.NewBusinessLogicError("user with this login already exists")
 	}
 
 	passwordHash, err := s.service.Auth.HashPassword(password)

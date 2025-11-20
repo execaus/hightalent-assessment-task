@@ -14,6 +14,20 @@ type AnswerRepository struct {
 	db *gorm.DB
 }
 
+func (r *AnswerRepository) GetAllByQuestionID(id uint) ([]*models.Answer, error) {
+	rows, err := gorm.G[AnswerTable](r.db).Where("question_id = ?", id).Find(context.Background())
+	if err != nil {
+		return nil, fmt.Errorf("failed to get answers: %w", err)
+	}
+
+	answers := make([]*models.Answer, len(rows))
+	for i := 0; i < len(rows); i++ {
+		answers[i] = rows[i].ToModel()
+	}
+
+	return answers, nil
+}
+
 func (r *AnswerRepository) Get(ctx context.Context, id uint) (*models.Answer, error) {
 	answer, err := gorm.G[AnswerTable](r.db).Where("id = ?", id).First(ctx)
 	if err != nil {

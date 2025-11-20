@@ -40,3 +40,15 @@ func NewUnauthorizedError(message string) *UnauthorizedError {
 		message: message,
 	}
 }
+
+type BusinessLoginError struct {
+	message string
+}
+
+func (e BusinessLoginError) Error() string {
+	return e.message
+}
+
+func NewBusinessLogicError(message string) *BusinessLoginError {
+	return &BusinessLoginError{message: message}
+}

@@ -94,7 +94,7 @@ func traversePrint(node *PathNode, currentPath string) {
 
 	if len(node.children) == 0 {
 		printPath := strings.TrimSuffix(currentPath+printValue, "/")
-		fmt.Printf("%s%s%s [%v handlers]\n", printPath, strings.Repeat("\t", 6), node.method, len(node.handlers))
+		fmt.Printf("[%v handlers] %s\t%s \n", len(node.handlers), node.method, printPath)
 		return
 	} else {
 		fullPath = currentPath + printValue

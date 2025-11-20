@@ -33,6 +33,7 @@ func (h *Handler) GetRouter() *router.Router {
 
 				question := questions.Group("{id}")
 				{
+					question.GET("", h.GetQuestion)
 					question.POST("answers", h.requireAuth, h.CreateAnswer)
 				}
 			}

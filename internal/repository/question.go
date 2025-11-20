@@ -2,14 +2,27 @@ package repository
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"hightalent-assessment-task/internal/models"
+	"hightalent-assessment-task/pkg/router"
 
 	"gorm.io/gorm"
 )
 
 type QuestionRepository struct {
 	db *gorm.DB
+}
+
+func (r *QuestionRepository) Get(ctx router.Context, id uint) (*models.Question, error) {
+	question, err := gorm.G[QuestionTable](r.db).Where("id = ?", id).First(ctx)
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, fmt.Errorf("question not found: %w", err)
+		}
+		return nil, fmt.Errorf("failed to get question: %w", err)
+	}
+	return question.ToModel(), nil
 }
 
 func (r *QuestionRepository) IsExistByID(id uint) (bool, error) {

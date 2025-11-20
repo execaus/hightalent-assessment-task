@@ -5,6 +5,7 @@ import (
 	"hightalent-assessment-task/config"
 	"hightalent-assessment-task/internal/models"
 	"hightalent-assessment-task/internal/repository"
+	"hightalent-assessment-task/pkg/router"
 
 	"github.com/google/uuid"
 )
@@ -14,6 +15,7 @@ import (
 type Answer interface {
 	Create(ctx context.Context, text string, questionID uint, userID uuid.UUID) (*models.Answer, error)
 	Get(ctx context.Context, id uint) (*models.Answer, error)
+	GetAllByQuestionID(id uint) ([]*models.Answer, error)
 }
 
 type User interface {
@@ -33,6 +35,7 @@ type Question interface {
 	IsExistByID(id uint) (bool, error)
 	Create(ctx context.Context, test string) (*models.Question, error)
 	GetAll(ctx context.Context) ([]*models.Question, error)
+	Get(ctx router.Context, id uint) (*models.Question, []*models.Answer, error)
 }
 
 type Service struct {

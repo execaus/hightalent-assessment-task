@@ -34,3 +34,26 @@ func (h *Handler) GetQuestions(ctx router.Context) {
 		Questions: questions,
 	})
 }
+
+func (h *Handler) GetQuestion(ctx router.Context) {
+	questionID, err := ctx.GetIntDynamicValue("id")
+	if err != nil {
+		ctx.Abort(err)
+		return
+	}
+
+	question, answers, err := h.service.Question.Get(ctx, uint(questionID))
+	if err != nil {
+		if question == nil {
+			ctx.SendNotFound(err.Error())
+			return
+		}
+		ctx.Abort(err)
+		return
+	}
+
+	ctx.SendOK(&models.GetQuestionResponse{
+		Question: question,
+		Answers:  answers,
+	})
+}

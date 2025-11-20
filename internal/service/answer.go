@@ -4,6 +4,7 @@ import (
 	"context"
 	"hightalent-assessment-task/internal/models"
 	"hightalent-assessment-task/internal/repository"
+	"hightalent-assessment-task/pkg/router"
 
 	"github.com/google/uuid"
 )
@@ -11,6 +12,10 @@ import (
 type AnswerService struct {
 	service    *Service
 	repository repository.Answer
+}
+
+func (s *AnswerService) GetAllByQuestionID(id uint) ([]*models.Answer, error) {
+	return s.repository.GetAllByQuestionID(id)
 }
 
 func (s *AnswerService) Get(ctx context.Context, id uint) (*models.Answer, error) {
@@ -24,7 +29,7 @@ func (s *AnswerService) Create(ctx context.Context, text string, questionID uint
 	}
 
 	if !isExist {
-		return nil, NewBusinessLoginError("cannot create answer: question does not exist")
+		return nil, router.NewBusinessLogicError("cannot create answer: question does not exist")
 	}
 
 	answer, err := s.repository.Create(ctx, text, questionID, userID)

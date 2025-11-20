@@ -10,7 +10,7 @@ type Answer struct {
 	ID         uint      `json:"id"`
 	Text       string    `json:"text"`
 	QuestionID uint      `json:"question_id"`
-	UserID     uuid.UUID `json:"user_id"`
+	UserID     uuid.UUID `json:"-"`
 	CreatedAt  time.Time `json:"created_at"`
 }
 

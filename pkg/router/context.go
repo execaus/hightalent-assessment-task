@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"hightalent-assessment-task/internal/service"
 	"io"
 	"log"
 	"net/http"
@@ -115,7 +114,7 @@ func (c *RequestContext) Abort(err error) {
 	c.isAbort = true
 
 	var httpError HTTPError
-	var businessLoginError service.BusinessLoginError
+	var businessLoginError BusinessLoginError
 
 	if errors.As(err, &httpError) {
 		c.writer.WriteHeader(httpError.StatusCode())

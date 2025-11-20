@@ -4,11 +4,23 @@ import (
 	"context"
 	"hightalent-assessment-task/internal/models"
 	"hightalent-assessment-task/internal/repository"
+	"hightalent-assessment-task/pkg/router"
 )
 
 type QuestionService struct {
 	service    *Service
 	repository repository.Question
+}
+
+func (s *QuestionService) Get(ctx router.Context, id uint) (*models.Question, []*models.Answer, error) {
+	question, err := s.repository.Get(ctx, id)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	answers, err := s.service.Answer.GetAllByQuestionID(id)
+
+	return question, answers, err
 }
 
 func (s *QuestionService) IsExistByID(id uint) (bool, error) {
