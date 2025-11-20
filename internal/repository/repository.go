@@ -9,6 +9,10 @@ import (
 
 //go:generate mockgen -source=repository.go -destination=mocks/mock.go
 
+type Answer interface {
+	Create(ctx context.Context, text string, questionID uint, userID uuid.UUID) (*models.Answer, error)
+}
+
 type User interface {
 	IsExistByLogin(ctx context.Context, login string) (bool, error)
 	Create(ctx context.Context, id uuid.UUID, login, password string) (*models.User, error)
@@ -16,6 +20,7 @@ type User interface {
 }
 
 type Question interface {
+	IsExistByID(id uint) (bool, error)
 	Create(ctx context.Context, text string) (*models.Question, error)
 	GetAll(ctx context.Context) ([]*models.Question, error)
 }
@@ -23,4 +28,5 @@ type Question interface {
 type Repository struct {
 	Question
 	User
+	Answer
 }

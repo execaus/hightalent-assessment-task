@@ -13,7 +13,7 @@ type PathNode struct {
 }
 
 func findHandlers(node *PathNode, path, method string) ([]HandleFunc, dynamicPathValues) {
-	path = strings.TrimPrefix(path, "/")
+	path = strings.Trim(path, "/")
 	if path == "" {
 		return nil, nil
 	}

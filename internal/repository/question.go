@@ -12,6 +12,14 @@ type QuestionRepository struct {
 	db *gorm.DB
 }
 
+func (r *QuestionRepository) IsExistByID(id uint) (bool, error) {
+	var count int64
+	if err := r.db.Model(&QuestionTable{}).Where("id = ?", id).Count(&count).Error; err != nil {
+		return false, fmt.Errorf("failed to check existence of question by id: %w", err)
+	}
+	return count > 0, nil
+}
+
 func (r *QuestionRepository) Create(ctx context.Context, text string) (*models.Question, error) {
 	question := QuestionTable{
 		Text: text,

@@ -42,3 +42,25 @@ func (t *UserTable) ToModel() *models.User {
 		Password: t.Password,
 	}
 }
+
+type AnswerTable struct {
+	ID         uint
+	QuestionID uint
+	UserID     uuid.UUID `gorm:"type:uuid"`
+	Text       string
+	CreatedAt  time.Time
+}
+
+func (t *AnswerTable) TableName() string {
+	return "app.answers"
+}
+
+func (t *AnswerTable) ToModel() *models.Answer {
+	return &models.Answer{
+		ID:         t.ID,
+		Text:       t.Text,
+		QuestionID: t.QuestionID,
+		UserID:     t.UserID,
+		CreatedAt:  t.CreatedAt,
+	}
+}

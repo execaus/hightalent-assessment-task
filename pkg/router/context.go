@@ -4,11 +4,14 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"hightalent-assessment-task/internal/service"
 	"io"
 	"log"
 	"net/http"
 	"reflect"
+
+	"github.com/google/uuid"
 )
 
 type Context interface {
@@ -19,6 +22,9 @@ type Context interface {
 	SendCreated(data interface{})
 	SendNotFound(data interface{})
 	SendOK(data interface{})
+	GetUserID() (uuid.UUID, error)
+	SetUserID(id string) error
+	GetHeader(key string) (string, error)
 }
 
 type RequestContext struct {
@@ -31,6 +37,35 @@ type RequestContext struct {
 	request       *http.Request
 	writer        http.ResponseWriter
 	ResponseBody  []byte
+	userID        *uuid.UUID
+}
+
+func (c *RequestContext) GetHeader(key string) (string, error) {
+	value := c.request.Header.Get(key)
+	if value == "" {
+		return "", fmt.Errorf("header %q not found", key)
+	}
+	return value, nil
+}
+
+func (c *RequestContext) GetUserID() (uuid.UUID, error) {
+	if c.userID == nil {
+		return uuid.Nil, errors.New("user ID not set")
+	}
+
+	return *c.userID, nil
+}
+
+func (c *RequestContext) SetUserID(id string) error {
+	parsed, err := uuid.Parse(id)
+	if err != nil {
+		c.userID = nil
+		return err
+	}
+
+	c.userID = &parsed
+
+	return nil
 }
 
 func NewRequestContext(ctx context.Context, cancel context.CancelFunc, writer http.ResponseWriter, request *http.Request) *RequestContext {

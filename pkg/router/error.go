@@ -22,3 +22,21 @@ func (e BadRequestError) StatusCode() int {
 func NewBadRequestError(message string) *BadRequestError {
 	return &BadRequestError{message: message}
 }
+
+type UnauthorizedError struct {
+	message string
+}
+
+func (e UnauthorizedError) Error() string {
+	return e.message
+}
+
+func (e UnauthorizedError) StatusCode() int {
+	return http.StatusUnauthorized
+}
+
+func NewUnauthorizedError(message string) *UnauthorizedError {
+	return &UnauthorizedError{
+		message: message,
+	}
+}

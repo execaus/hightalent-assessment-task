@@ -11,6 +11,10 @@ import (
 
 //go:generate mockgen -source=service.go -destination=mocks/mock.go
 
+type Answer interface {
+	Create(ctx context.Context, text string, questionID uint, userID uuid.UUID) (*models.Answer, error)
+}
+
 type User interface {
 	IsExistByLogin(ctx context.Context, login string) (bool, error)
 	Create(ctx context.Context, login, password string) (user *models.User, token string, err error)
@@ -25,6 +29,7 @@ type Auth interface {
 }
 
 type Question interface {
+	IsExistByID(id uint) (bool, error)
 	Create(ctx context.Context, test string) (*models.Question, error)
 	GetAll(ctx context.Context) ([]*models.Question, error)
 }
@@ -33,6 +38,7 @@ type Service struct {
 	Question
 	Auth
 	User
+	Answer
 }
 
 func NewService(repos *repository.Repository, cfg *config.AuthConfig) *Service {
@@ -41,6 +47,7 @@ func NewService(repos *repository.Repository, cfg *config.AuthConfig) *Service {
 	s.Question = NewQuestionService(repos.Question, &s)
 	s.Auth = NewAuthService(cfg)
 	s.User = NewUserService(repos.User, &s)
+	s.Answer = NewAnswerService(repos.Answer, &s)
 
 	return &s
 }

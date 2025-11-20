@@ -26,5 +26,6 @@ func NewGormRepository(cfg *config.DatabaseConfig) *Repository {
 	return &Repository{
 		Question: NewQuestionRepository(gormDB),
 		User:     NewUserRepository(gormDB),
+		Answer:   NewAnswerRepository(gormDB),
 	}
 }

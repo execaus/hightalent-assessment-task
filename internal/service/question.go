@@ -11,6 +11,10 @@ type QuestionService struct {
 	repository repository.Question
 }
 
+func (s *QuestionService) IsExistByID(id uint) (bool, error) {
+	return s.repository.IsExistByID(id)
+}
+
 func (s *QuestionService) Create(ctx context.Context, text string) (*models.Question, error) {
 	return s.repository.Create(ctx, text)
 }
